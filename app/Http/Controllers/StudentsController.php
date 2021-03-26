@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Student;
 
 class StudentsController extends Controller
 {
@@ -39,15 +40,25 @@ class StudentsController extends Controller
         $name_value = $request->input('name');
         $email_value = $request->input('email');
         $age_value = $request->input('age');
-        $insert_data = [
-            'name' => $name_value,
-            'email' => $email_value,
-            'age' => $age_value,
-            'created_at' => Carbon::now()->toDatetimeString(),
-            'updated_at' => Carbon::now()->toDatetimeString(),
-        ];
-        DB::table('students')->insert($insert_data);
+        // $insert_data = [
+        //     'name' => $name_value,
+        //     'email' => $email_value,
+        //     'age' => $age_value,
+        //     'created_at' => Carbon::now()->toDatetimeString(),
+        //     'updated_at' => Carbon::now()->toDatetimeString(),
+        // ];
+        // DB::table('students')->insert($insert_data);
+
+        $student = new Student();
+        $student->name = $name_value;
+        $student->email = $email_value;
+        $student->age = $age_value;
+        $student->save();
         
+        return response()->json([
+            'id' => $student->id,
+            'name' => $student->name,
+        ]);
     }
 
     /**
@@ -56,7 +67,7 @@ class StudentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
         //
     }

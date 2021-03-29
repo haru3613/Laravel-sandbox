@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StudentUpdateRequest;
+use App\Http\Requests\StudentCreateRequest;
 use App\Student;
 
 class StudentsController extends Controller
@@ -35,7 +37,7 @@ class StudentsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StudentCreateRequest $request)
     {
         // $name_value = $request->input('name');
         // $email_value = $request->input('email');
@@ -67,7 +69,13 @@ class StudentsController extends Controller
      */
     public function show($id)
     {
-        $student = Student::find($id);
+        try {
+            $student = Student::findOrFail($id);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Not found the student'
+            ], 404);
+        }
         return $student;
     }
 
@@ -89,10 +97,18 @@ class StudentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StudentUpdateRequest $request, $id)
     {
-        $student = Student::find($id);
-
+        
+        try {
+            $student = Student::findOrFail($id);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Not found the student'
+            ], 404);
+        }
+        $student->update($request->all());
+        return response($student);
         // $name_value = $request->input('name', $student->name);
         // $email_value = $request->input('email', $student->email);
         // $age_value = $request->input('age', $student->age);
@@ -102,9 +118,9 @@ class StudentsController extends Controller
         // $student->email = $email_value;
         // $student->age = $age_value;
         
-        $student->update($request->all());
+        
         // $student->save();
-        return response($student);
+        
     }
 
     /**
@@ -115,7 +131,13 @@ class StudentsController extends Controller
      */
     public function destroy($id)
     {
-        $student = Student::find($id);
+        try {
+            $student = Student::findOrFail($id);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Not found the student'
+            ], 404);
+        }
         $student->delete();
         return response()->json(null);
     }

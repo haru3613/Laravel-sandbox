@@ -19,12 +19,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/create_student', 'StudentsController@store')->name('create_student');
-Route::get('/get_student', function (Request $request) {
-    $student_id = $request->input('student_id');
-    $student_orm = Student::all();
+Route::post('/student', 'StudentsController@store')->name('create_student');
+Route::get('/student', 'StudentsController@index')->name('get_student');
+// Route::get('/student', function (Request $request) {
+//     $student_id = $request->input('student_id');
+//     $student_orm = Student::all();
     
-    $student_builder = DB::table('students')->get();
-    dd($student_builder->toArray(), data_get($student_builder->toArray(), '0.name'));
-    dd($student_orm->toArray());
-});
+//     $student_builder = DB::table('students')->get();
+//     dd($student_builder->toArray(), data_get($student_builder->toArray(), '0.name'));
+//     dd($student_orm->toArray());
+// });
+Route::get('/student/{id}', 'StudentsController@show')->name('get_specific_student');
+Route::delete('/student/{id}', 'StudentsController@destroy')->name('delete_student');
+Route::put('/student/{id}', 'StudentsController@update')->name('update_student');

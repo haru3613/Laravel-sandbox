@@ -16,7 +16,7 @@ class StudentsController extends Controller
      */
     public function index()
     {
-        //
+        return Student::all();
     }
 
     /**
@@ -37,9 +37,9 @@ class StudentsController extends Controller
      */
     public function store(Request $request)
     {
-        $name_value = $request->input('name');
-        $email_value = $request->input('email');
-        $age_value = $request->input('age');
+        // $name_value = $request->input('name');
+        // $email_value = $request->input('email');
+        // $age_value = $request->input('age');
         // $insert_data = [
         //     'name' => $name_value,
         //     'email' => $email_value,
@@ -49,16 +49,14 @@ class StudentsController extends Controller
         // ];
         // DB::table('students')->insert($insert_data);
 
-        $student = new Student();
-        $student->name = $name_value;
-        $student->email = $email_value;
-        $student->age = $age_value;
-        $student->save();
+        // $student = new Student();
+        // $student->name = $name_value;
+        // $student->email = $email_value;
+        // $student->age = $age_value;
+        // $student->save();
+        $student = Student::create($request->all());
         
-        return response()->json([
-            'id' => $student->id,
-            'name' => $student->name,
-        ]);
+        return response()->json($student, 200);
     }
 
     /**
@@ -67,9 +65,10 @@ class StudentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show($id)
     {
-        //
+        $student = Student::find($id);
+        return $student;
     }
 
     /**
@@ -92,7 +91,20 @@ class StudentsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $student = Student::find($id);
+
+        // $name_value = $request->input('name', $student->name);
+        // $email_value = $request->input('email', $student->email);
+        // $age_value = $request->input('age', $student->age);
+
+    
+        // $student->name = $name_value;
+        // $student->email = $email_value;
+        // $student->age = $age_value;
+        
+        $student->update($request->all());
+        // $student->save();
+        return response($student);
     }
 
     /**
@@ -103,6 +115,8 @@ class StudentsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $student = Student::find($id);
+        $student->delete();
+        return response()->json(null);
     }
 }

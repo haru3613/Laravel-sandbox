@@ -58,7 +58,7 @@ class StudentRepository
         } catch (\Exception $e) {
             $err_msg = $e->getMessage();
             return [
-                'message' =>$err_msg
+                'message' => $err_msg
             ];
         }
     }

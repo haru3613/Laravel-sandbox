@@ -4,13 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StudentUpdateRequest;
 use App\Http\Requests\StudentCreateRequest;
-use App\Student;
+use App\Services\StudentService;
 
 class StudentsController extends Controller
 {
+    /**
+     * @var 商業邏輯層
+     */
+    protected $student_service;
+
+    public function __construct(StudentService $student_service)
+    {
+        $this->student_service = $student_service;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +27,12 @@ class StudentsController extends Controller
      */
     public function index()
     {
-        return Student::all();
+        $result = $this->student_service->handleGetStudentList();
+
+        return response()->json([
+            'code' =>  'e0000',
+            'result' => $result
+        ]);
     }
 
     /**
@@ -39,26 +53,12 @@ class StudentsController extends Controller
      */
     public function store(StudentCreateRequest $request)
     {
-        // $name_value = $request->input('name');
-        // $email_value = $request->input('email');
-        // $age_value = $request->input('age');
-        // $insert_data = [
-        //     'name' => $name_value,
-        //     'email' => $email_value,
-        //     'age' => $age_value,
-        //     'created_at' => Carbon::now()->toDatetimeString(),
-        //     'updated_at' => Carbon::now()->toDatetimeString(),
-        // ];
-        // DB::table('students')->insert($insert_data);
-
-        // $student = new Student();
-        // $student->name = $name_value;
-        // $student->email = $email_value;
-        // $student->age = $age_value;
-        // $student->save();
-        $student = Student::create($request->all());
+        $result = $this->student_service->handleCreateStudent($request->all());
         
-        return response()->json($student, 200);
+        return response()->json([
+            'code' =>  'e0000',
+            'result' => $result
+        ]);
     }
 
     /**
@@ -69,14 +69,12 @@ class StudentsController extends Controller
      */
     public function show($id)
     {
-        try {
-            $student = Student::findOrFail($id);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Not found the student'
-            ], 404);
-        }
-        return $student;
+        $result = $this->student_service->handleGetSpecificStudent($id);
+       
+        return response()->json([
+            'code' =>  'e0000',
+            'result' => $result
+        ]);
     }
 
     /**
@@ -99,28 +97,13 @@ class StudentsController extends Controller
      */
     public function update(StudentUpdateRequest $request, $id)
     {
-        
-        try {
-            $student = Student::findOrFail($id);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Not found the student'
-            ], 404);
-        }
-        $student->update($request->all());
-        return response($student);
-        // $name_value = $request->input('name', $student->name);
-        // $email_value = $request->input('email', $student->email);
-        // $age_value = $request->input('age', $student->age);
+        $result = $this->student_service->handleUpdateStudent($request->all(), $id);
 
-    
-        // $student->name = $name_value;
-        // $student->email = $email_value;
-        // $student->age = $age_value;
-        
-        
-        // $student->save();
-        
+        return response()->json([
+            'code' =>  'e0000',
+            'result' => $result
+        ]);
+
     }
 
     /**
@@ -131,14 +114,11 @@ class StudentsController extends Controller
      */
     public function destroy($id)
     {
-        try {
-            $student = Student::findOrFail($id);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Not found the student'
-            ], 404);
-        }
-        $student->delete();
-        return response()->json(null);
+        $result = $this->student_service->handleDeleteStudent($id);
+
+        return response()->json([
+            'code' =>  'e0000',
+            'result' => $result
+        ]);
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Student;
-use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------

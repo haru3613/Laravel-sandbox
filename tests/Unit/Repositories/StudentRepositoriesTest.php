@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Repositories;
 
 // use PHPUnit\Framework\TestCase;
 use App\Student;
@@ -10,7 +10,7 @@ use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class StudentTest extends TestCase
+class StudentRepositoriesTest extends TestCase
 {
 
     use RefreshDatabase;
@@ -71,6 +71,12 @@ class StudentTest extends TestCase
         ]);
     }
 
+    public function testGetNotExistedStudent()
+    {
+        $result = $this->student_repository->getSpecificStudent(1);
+        $this->assertArrayHasKey('message', $result);
+    }
+
     public function testUpdateStudent() {
         $student = factory(Student::class)->create();
         $fake_data = [
@@ -88,9 +94,25 @@ class StudentTest extends TestCase
 
     }
 
+    public function testUpdateNotExistedStudent() {
+        $fake_data = [
+            'name' => $this->faker->name,
+            'email' => $this->faker->email,
+            'age' => rand(0, 99)
+        ];
+        $result = $this->student_repository->updateStudent($fake_data, 1);
+        $this->assertArrayHasKey('message', $result);
+
+    }
+
     public function testDeleteStudent() {
         $student = factory(Student::class)->create();
         $result = $this->student_repository->deleteStudent($student->id);
         $this->assertCount(0, Student::all());
+    }
+
+    public function testDeleteNotExistedStudent() {
+        $result = $this->student_repository->deleteStudent(1);
+        $this->assertArrayHasKey('message', $result);
     }
 }

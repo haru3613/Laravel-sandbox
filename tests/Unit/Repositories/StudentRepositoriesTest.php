@@ -34,9 +34,8 @@ class StudentRepositoriesTest extends TestCase
         $result = $this->student_repository->getStudentList();
         foreach ($result as $item) {
             $this->assertDatabaseHas('students', [
+                'id' => $item->id,
                 'name' => $item->name,
-                'email' => $item->email,
-                'age' => $item->age,
             ]);
         }
         $this->assertCount(5, $result);

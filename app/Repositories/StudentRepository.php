@@ -17,6 +17,7 @@ class StudentRepository
     {
         try {
             return Student::all();
+            
         } catch (\Exception $e) {
             $err_msg = $e->getMessage();
             return [

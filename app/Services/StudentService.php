@@ -26,15 +26,23 @@ class StudentService
      */
     public function handleGetStudentList()
     {
-        $result_data = [];
         $result = $this->student_repository->getStudentList();
-        foreach ($result as $data) {
-            array_push($result_data, [
-                'id' => $data->id,
-                'name' => $data->name
+
+        if (empty($result)) {
+            return [
+                'code' => 0,
+                'message' => 'data not found'
+            ];
+        }
+        
+        $data = [];
+        foreach ($result as $student) {
+            array_push($data, [
+                'id' => $student->id,
+                'name' => $student->name
             ]);
         }
-        return $result_data;
+        return $data;
     }
 
     /**

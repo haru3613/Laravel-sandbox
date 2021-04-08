@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Classroom;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/student', 'StudentsController@store')->name('create_student');
 Route::get('/student', 'StudentsController@index')->name('get_student');
+Route::get('/class/{id}', 'ClassController@show')->name('get_specific_classroom_student');
 // Route::get('/student', function (Request $request) {
 //     $student_id = $request->input('student_id');
 //     $student_orm = Student::all();
@@ -30,3 +32,8 @@ Route::get('/student', 'StudentsController@index')->name('get_student');
 Route::get('/student/{id}', 'StudentsController@show')->name('get_specific_student');
 Route::delete('/student/{id}', 'StudentsController@destroy')->name('delete_student');
 Route::put('/student/{id}', 'StudentsController@update')->name('update_student');
+
+Route::get('/test', function() {
+    $class = Classroom::find(1);
+    dd($class->name);
+});

@@ -22,5 +22,6 @@ $factory->define(Student::class, function (Faker $faker, array $attributes = [])
         'name' => $faker->name,
         'email' => $faker->email,
         'age' => rand(0, 100),
+        'class_id' => 1
     ];
 });

@@ -39,7 +39,8 @@ class StudentService
         foreach ($result as $student) {
             array_push($data, [
                 'id' => $student->id,
-                'name' => $student->name
+                'name' => $student->name,
+                'class' => $student->classrooms->name,
             ]);
         }
         return $data;
